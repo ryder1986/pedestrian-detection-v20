@@ -106,7 +106,7 @@ public:
                         pedestrians = frame(*it);
 
                         Rect rct = *it;
-                        if (rct.width >= min_win_width && rct.width < max_win_width)
+                      //  if (rct.width >= min_win_width && rct.width < max_win_width)
                         {
                             //   sprintf(file_name, "%d.jpg", pedestrian_num);
                             //  imwrite(file_name, pedestrians);
