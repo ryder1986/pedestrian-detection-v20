@@ -18,6 +18,7 @@ Q_OBJECT
         bool quit;
         VideoWidget *video_render;
         QByteArray rst;
+        mutex lock;
     }data_t;
     data_t d;
 
@@ -31,10 +32,13 @@ private:
 
             flg=p_data->p_src->fetch_frame(mt);
             if(flg){
+                p_data->lock.lock();
                 if(p_data->rst.size()>0)
                      p_data->video_render->set_rects(p_data->rst);
+                   p_data->rst.clear();
+                   p_data->lock.unlock();
                 p_data->video_render->update_mat(mt);
-                p_data->rst.clear();
+
             }
             this_thread::sleep_for(chrono::milliseconds(30));
         }
@@ -67,8 +71,10 @@ public slots:
     {
         prt(debug,"get %s",rst.toStdString().data());
 #if 1
+        d.lock.lock();
         d.rst.clear();
         d.rst=rst;
+        d.lock.unlock();
 #else
         QString str(rst.data());
         QStringList list=str.split(":");

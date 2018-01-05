@@ -84,7 +84,7 @@ public:
     {
         udp_skt_alg_output=new QUdpSocket(this);
         udp_skt_alg_output->bind(Protocol::SERVER_DATA_OUTPUT_PORT,QUdpSocket::ShareAddress);
-        connect(udp_skt_alg_output,SIGNAL(readyRead()),this,SLOT(get_rst()));
+        connect(udp_skt_alg_output,SIGNAL(readyRead()),this,SLOT(get_rst()),Qt::QueuedConnection);
           }
 signals:
     void send_rst(QByteArray);
