@@ -108,6 +108,7 @@ public:
     }
     ~ClientSession()
     {
+        close_output();
         delete timer;
      //   //    disconnect(timer,SIGNAL(timeout()),this,SLOT(send_rst_to_client()));
        // delete udp_skt;
@@ -122,7 +123,7 @@ public slots:
     {
         focus_index=0;
     }
-    bool camera_foucused()
+    bool camera_focused()
     {
         if(focus_index>0)
             return true;
@@ -135,13 +136,13 @@ public slots:
         ProcessedDataSender *sender=ProcessedDataSender::get_instance();
         CameraManager &mgr=  CameraManager::GetInstance();
         QByteArray ba;
-        if(focus_index&&focus_index<=mgr.cam_num()){
+        if(camera_focused()&&focus_index<=mgr.cam_num()){
             //prt(info,"checking camera %d",focus_index);
             if(mgr.try_get_data(focus_index-1,ba)){
                 sender->send(ba,client_addr);
             }
         }else{
-            if(camera_foucused()){
+            if(camera_focused()){
                 prt(info,"close camera %d output",focus_index);
                 close_output();
             }
@@ -232,6 +233,7 @@ public slots:
 signals :
     int get_server_config(char *buf);
     void socket_error(ClientSession *c);
+//    int try_lock_server();
 private:
     char *rcv_buf;
     char send_buf[Pd::BUFFER_LENGTH];
